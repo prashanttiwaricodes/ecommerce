@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Category(models.Model):
@@ -23,3 +24,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def validate_image_size(image):
+    max_size= 5 * 1024 * 1024
+
+    if image.size > max_size:
+     raise ValidationError("Image size must be less than 5 mb ")
+
+class ProductImage(models.Model):
+    product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name="images")
+    image=models.ImageField(upload_to="products/",
+    validators=[validate_image_size],)    
+    alt_text=models.CharField(max_length=200,blank=True) 
+    created_at=models.DateTimeField(auto_now_add=True) 
+
+    def __str__(self):
+        return f"{self.product.name} image"  
