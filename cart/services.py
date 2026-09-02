@@ -43,3 +43,8 @@ def remove_from_cart(user,product_id):
                                    
     )
     cart_item.delete()
+
+
+
+def get_cart_total(cart):
+    return sum(item.product.price * item.quantity for item in cart.items.select_related("product") )    

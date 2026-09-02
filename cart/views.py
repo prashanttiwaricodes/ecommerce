@@ -1,14 +1,15 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Cart
-from .services import(add_to_cart,remove_from_cart,update_cart_quantity,)
+from .services import(add_to_cart,remove_from_cart,update_cart_quantity,get_cart_total)
 
 # Create your views here.
 @login_required
 def cart_detail(request):
     cart,_=Cart.objects.get_or_create(user=request.user)
+    total=get_cart_total(cart)
 
-    return render(request,"Cart/cart_detail.html",{"cart":cart},)
+    return render(request,"Cart/cart_detail.html",{"cart":cart,"total":total,},)
 
 @login_required
 def add_product_to_cart(request,product_id):
