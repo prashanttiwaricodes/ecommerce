@@ -32,6 +32,7 @@
              <span class="navbar-text me-3">
                 Hi, {{ user.email }}
              </span>
+             <a class="btn btn-secondary me-2" href="{% url 'orders:list' %}">My Orders</a>
              <a class="btn btn-outline-danger" href="{% url 'accounts:logout' %}">Logout</a>
               {% else %}
               <a class="btn btn-outline-primary" href="{% url 'accounts:login' %}">Login</a>
