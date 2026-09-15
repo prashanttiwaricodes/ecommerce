@@ -11,6 +11,11 @@
         <div class="col-12 col-sm-6 col-lg-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex flex-column">
+                    {% with image=product.images.first %}
+                    {% if image %}
+                    <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.alt_text|default:product.name }}">
+                    {% endif %}
+                    {% endwith %}
                     <h5 class="card-title">
                         {{ product.name }}
                     </h5>
