@@ -25,6 +25,20 @@ def product_list(request):
     if max_price:
         products = products.filter(price__lte=max_price)  
 
+    sort = request.GET.get("sort","").strip()
+
+    if sort == "price_low":
+        products = products.order_by("price")    
+
+    elif sort == "price_high":
+        products = products.order_by("-price")   
+
+    elif  sort == "newest":
+        products = products.order_by("-created_at")     
+
+    elif   sort == "name":
+        products = products.order_by("name")         
+
 
     return render(request,"Product/product_list.html",{"products": products,"categories":categories,},)
 
