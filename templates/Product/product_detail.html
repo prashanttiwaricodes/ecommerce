@@ -31,6 +31,7 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
             </form>
+            <a href="{% url 'products:wishlist_add' product.id %}" class="btn btn-outline-danger">❤️ Add to Wishlist</a> 
             <a href="{% url 'products:list' %}" class="btn btn-outline-secondary mt-3">Back to Products</a>
         </div>
     </div>
