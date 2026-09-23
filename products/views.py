@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Product,Category
+from django.shortcuts import render, get_object_or_404,redirect
+from .models import Product,Category,Wishlist
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def product_list(request):
@@ -48,3 +49,25 @@ def product_detail(request,product_id):
     print("PRODUCT:",product)
 
     return render(request,"Product/product_detail.html",{"product":product},)
+
+
+
+@login_required
+def wishlist_view(request):
+    wishlist_items=(Wishlist.objects.filter(user=request.user).select_related("product"))
+    return render(request,"Wishlist/wishlist.html",{"wishlist_items":wishlist_items},)
+
+@login_required
+def add_to_wishlist(request,product_id):
+    product=get_object_or_404(Product,id=product_id,is_active=True,)
+    Wishlist.objects.get_or_create(user=request.user,product=product)
+
+    return redirect("products:list")
+
+
+
+@login_required
+def remove_from_wishlist(request,product_id):
+    Wishlist.objects.filter(user=request.user,product_id=product_id,).delete()
+
+    return redirect("products:wishlist")
