@@ -61,3 +61,30 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.email}-{self.product.name}"    
+
+
+
+
+class ProductReview(models.Model):
+    product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name="reviews",) 
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="product_reviews",)  
+    rating=models.PositiveSmallIntegerField()
+    comment=models.TextField()
+    created_at=models.DateTimeField(auto_now_add=True) 
+    updated_at=models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(
+                fields=["product","user"],
+                name="unique_user_product_review",
+
+            )
+        ]
+        ordering=["-created_at"]
+
+
+    def __str__(self):
+        return f"{self.product.name}-{self.user.email}({self.rating}/5)"    
+        
