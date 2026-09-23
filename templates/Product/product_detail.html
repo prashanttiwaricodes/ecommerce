@@ -32,6 +32,95 @@
                 <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
             </form>
             <a href="{% url 'products:wishlist_add' product.id %}" class="btn btn-outline-danger">❤️ Add to Wishlist</a> 
+            <hr class="my-5">
+            <div class="mb-4">
+                <h3>Customer Reviews</h3>
+                {% if average_rating %}
+                <p class="mb-0">
+                    <strong>{{ average_rating|floatformat:1 }}/5</strong>⭐
+                </p>
+                <small class="text-muted">Based on {{ reviews|length }} review{{ reviews|length|pluralize }}</small>
+                {% else %}
+                <p class="text-muted">
+                    No Reviews yet.
+                </p>
+                {% endif %}
+
+            </div>
+            {% if user.is_authenticated and not user_review %}
+            <div class="card-mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Write a Review</h5>
+
+                    <form method="post" action="{% url 'products:review_add' product.id %}">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <select name="rating" id="rating" class="form-select" required >
+                                <option value="">Choose rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                                <option value="4">⭐⭐⭐⭐ 4</option>
+                                <option value="3">⭐⭐⭐ 3</option>
+                                <option value="2">⭐⭐ 2</option>
+                                <option value="1">⭐ 1</option>
+
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">
+                                Review
+                            </label>
+                            <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Write your review.." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+          {% elif not user.is_authenticated %}
+          <p class="text-muted">
+            Please log in to write a review.
+          </p>
+          {% else %}
+          <div class="alert alert-info">
+            You have already review this product.
+            <a href="{% url 'products:review_edit' user_review.id %}" class="alert-link">
+                Edit Your review
+            </a>
+          </div>
+          {% endif %}
+            {% if reviews %}
+            <div class="list-group">
+                {% for review in reviews %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ review.user.email }}</strong>
+                        <span>
+                            {% if review.rating >= 1 %}⭐{% endif %}
+                            {% if review.rating >= 2 %}⭐{% endif %}
+                            {% if review.rating >= 3 %}⭐{% endif %}
+                            {% if review.rating >= 4 %}⭐{% endif %}
+                            {% if review.rating >= 5 %}⭐{% endif %}
+                        </span>
+                    </div>
+                    <p class="mb-1 mt-2">
+                        {{ review.comment }}
+                    </p>
+                    <small class="text-muted">
+                        {{ review.created_at|date:"M d, Y" }}
+                    </small>
+                    {% if user == review.user %}
+                    <div class="mt-2">
+                        <a href="{% url 'products:review_edit' review.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{% url 'products:review_delete' review.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <a href="{% url 'products:list' %}" class="btn btn-outline-secondary mt-3">Back to Products</a>
         </div>
     </div>
