@@ -4,17 +4,27 @@ from cart.models import Cart
 from cart.services import get_cart_total
 from .services import create_order_from_cart
 from.models import Order
+from django.contrib import messages
 
 # Create your views here.
 @login_required
 def checkout(request):
     cart,_=Cart.objects.get_or_create(user=request.user)
     if request.method =="POST":
-        order=create_order_from_cart(cart)
-        return render(request,"Order/order_success.html",{"order":order},)
+        try:
+            order=create_order_from_cart(cart)
 
-    total=get_cart_total(cart)
-    return render(request,"Order/checkout.html",{"cart":cart,"total":total,},)
+        except ValueError as e:
+            messages.error(request, str(e))
+
+            return redirect("orders:checkout") 
+
+        return render(request,"Order/order_success.html",{"order":order},) 
+
+    total=get_cart_total(cart)  
+
+    return render(request,"Order/checkout.html",{"cart":cart,"total":total,},)   
+   
 
 
 @login_required

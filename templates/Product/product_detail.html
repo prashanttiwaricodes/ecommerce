@@ -22,14 +22,31 @@
         <div class="col-md-6">
             <h1>{{ product.name }}</h1>
             <h3 class="text-primary mb-4">
-                {{ product.price }}
+                ₹ {{ product.price }}
             </h3>
+            {% if product.stock == 0 %}
+            <p class="text-danger fw-bold">
+                Out of Stock
+            </p>
+            {% elif product.stock <= 5 %}
+            <p class="text-warning fw-bold">
+                Only {{ product.stock }} left
+            </p>
+            {% else %}
+            <p class="text-success fw-bold">
+                In Stock
+            </p>
+            {% endif %}
             <p class="text-muted">
                 {{ product.description }}
             </p>
             <form method="post" action="{% url 'cart:add' product.id %}">
                 {% csrf_token %}
+                {% if product.stock > 0 %}
                 <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                {% else %}
+                <button type="button" class="btn btn-secondary" disabled>Out of Stock</button>
+                {% endif %}
             </form>
             <a href="{% url 'products:wishlist_add' product.id %}" class="btn btn-outline-danger">❤️ Add to Wishlist</a> 
             <hr class="my-5">

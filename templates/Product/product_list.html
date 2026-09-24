@@ -72,7 +72,7 @@
                         {{ product.description|truncatewords:20 }}
                     </p>
                     <h5 class="mt-auto mb-3">
-                        {{ product.price }}
+                       ₹ {{ product.price }}
                     </h5>
                     <a href="{% url 'products:detail' product.id %}" class="btn btn-outline-primary w-100 mb-2">View Details</a>
                     <form method="post" action="{% url 'cart:add' product.id %}">
