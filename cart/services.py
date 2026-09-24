@@ -12,12 +12,24 @@ def add_to_cart(user,product_id,quantity=1):
         defaults={"quantity":quantity},
     )
 
-    if not created:
-        cart_item.quantity += quantity
-        cart_item.save(update_fields=["quantity","updated_at"])
+    if created:
+       if quantity > product.stock:
+           cart_item.delete()
+           return None
 
-        return cart_item
+       return cart_item
 
+    new_quantity = cart_item.quantity + quantity
+
+    if new_quantity > product.stock:
+        return None
+
+    cart_item.quantity = new_quantity
+    cart_item.save(
+        update_fields=["quantity","updated_at"]
+    )
+
+    return cart_item
 
 def update_cart_quantity(user,product_id,quantity):
     cart=Cart.objects.get(user=user)  
@@ -27,6 +39,9 @@ def update_cart_quantity(user,product_id,quantity):
     )  
     if quantity <= 0:
         cart_item.delete()
+        return None
+
+    if quantity > cart_item.product.stock:
         return None
     
     cart_item.quantity=quantity

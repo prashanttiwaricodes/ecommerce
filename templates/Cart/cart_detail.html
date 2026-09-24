@@ -21,6 +21,14 @@
                             <p class="text-muted mb-0">
                                 Price: {{ item.product.price }}
                             </p>
+                            <p class="small text-muted mb-1">
+                                Stock: {{ item.product.stock }}
+                            </p>
+                            
+                            <p class="small text-muted mb-2">
+                                {{ item.available_to_add }} left to add 
+                            </p>
+                           
                         </div>
                         <div class="col-md-3">
                           <form method="post" action="{% url 'cart:update' item.product.id %}" class="d-flex align-items-center gap-2">
@@ -59,7 +67,7 @@
                         <span>Total</span>
                         <strong>₹{{ total }}</strong>
                     </div>
-                    <button class="btn btn-primary w-100"disabled>Proceed to Checkout</button>
+                    <a href="{% url 'orders:checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
                 </div>
 
 
