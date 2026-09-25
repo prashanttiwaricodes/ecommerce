@@ -12,13 +12,48 @@
                 <span>₹{{ item.product.price|floatformat:2 }}</span>
             </div>
             {% endfor %}
-            <div class="d-flex justify-content-between mt-3">
-                <strong>Total</strong>
-                <strong>₹{{ total|floatformat:2 }}</strong>
+           <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Order Summary</h5>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <span>₹{{ subtotal|floatformat:2 }}</span>
+                </div>
+                {% if coupon %}
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>
+                        Discount ({{ coupon.code }})
+                    </span>
+                    <span>
+                        -₹{{ discount|floatformat:2 }}
+                    </span>
+                </div>
+                {% endif %}
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>₹{{ final_total|floatformat:2 }}</span>
+                </div>
             </div>
+           </div>
             {% else %}
             <p class="text-muted">Your Cart is empty</p>
             {% endif %}
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Have a coupon?</h5>
+            <form method="post" action="{% url 'orders:apply_coupon' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="coupon_code" class="form-control" placeholder="Enter coupon code" required >
+                    <button type="submit" class="btn btn-outline-primary">
+                        Apply Coupon
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     {% if cart.items.all %}
