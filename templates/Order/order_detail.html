@@ -29,6 +29,31 @@
                     ₹{% widthratio item.price 1 item.quantity %}
                 </strong>
             </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ order.subtotal_amount|floatformat:2 }}</span>
+                    </div>
+                    {% if order.coupon %}
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                        <span>
+                            Discount({{ order.coupon.code }})
+                        </span>
+                        <span>
+                            -₹{{ order.discount_amount|floatformat:2 }}
+                        </span>
+                    </div>
+                        {% endif %}
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total</span>
+                            <span>₹{{ order.total_amount|floatformat:2 }}</span>
+                        </div>
+                </div>
+            </div>
+            
             {% endfor %}
             <div class="d-flex justify-content-between mt-4">
                 <strong>Total</strong>
